@@ -1,63 +1,67 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#17251f"><title>Samtyr Restaurant — меню</title>
-<style>
-:root{--bg:#f5f2eb;--ink:#202820;--muted:#73786f;--green:#243b30;--gold:#c59b58;--line:#e5e0d5}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Arial,sans-serif}
-header{background:linear-gradient(135deg,#17251f,#344b3c);color:#fff;padding:42px 20px 34px;text-align:center}
-.brand{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:#e4c58f}h1{font:normal 42px Georgia,serif;margin:10px 0 4px}.sub{color:#d7dfd7;margin:0}
-main{max-width:900px;margin:28px auto;padding:0 16px 60px}.notice{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 16px;color:#5d655d;font-size:14px;margin-bottom:22px}
-.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}.tools input{flex:1;min-width:190px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:15px}
-.category{margin:28px 0 0}.category h2{font:normal 25px Georgia,serif;border-bottom:1px solid var(--gold);padding-bottom:9px;margin:0 0 8px}
-.item{display:flex;justify-content:space-between;gap:18px;padding:14px 2px;border-bottom:1px solid var(--line)}.item-name{font-weight:600}.desc{font-size:13px;color:var(--muted);margin-top:3px}.right{text-align:right;min-width:105px}.price{font-weight:700;white-space:nowrap}.status{font-size:12px;margin-top:5px;color:#8b6b36}.status.available{color:#28724b}.status.unavailable{color:#a34337}
-.admin{margin:26px 0 0;padding:16px;background:#fff;border:1px solid var(--line);border-radius:12px}.admin summary{cursor:pointer;font-weight:600}.admin p{font-size:13px;color:var(--muted)}.admin button{border:0;border-radius:8px;padding:8px 11px;margin:4px 4px 0 0;background:#edf1ec;color:#243b30;cursor:pointer}.admin button.active{background:#243b30;color:#fff}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
-@media(max-width:520px){h1{font-size:34px}.item{gap:10px}.right{min-width:82px}.price{font-size:14px}}
-</style></head><body>
-<header><div class="brand">Samtyr Restaurant</div><h1>Наше меню</h1><p class="sub">Вкус, к которому хочется вернуться</p></header>
-<main><div class="notice">Наличие блюд обновляется рестораном. Если рядом с блюдом указано «уточняйте», пожалуйста, спросите сотрудника.</div>
-<div class="tools"><input id="search" placeholder="Найти блюдо или напиток…" aria-label="Поиск по меню"></div>
-<div id="menu"></div>
-<details class="admin"><summary>Управление наличием (для персонала)</summary><p>Изменения сохраняются в этом браузере на этом устройстве. Для синхронизации статусов у всех гостей потребуется подключить общий онлайн-сервис.</p><div id="adminList"></div><button id="reset">Сбросить статусы</button></details>
-</main><footer>Samtyr Restaurant · Цены указаны в сомах</footer>
-<script>
-const sections = [{"title": "Салаты", "items": [{"name": "Цезарь с курицей", "price": "650", "desc": "Салат айсберг, соус «Цезарь», перепелиное яйцо, черри, пармезан, сухари"}, {"name": "Греческий салат", "price": "525", "desc": "Огурец, помидор, сладкий перец, листья салата, оливковое масло, лимонный сок"}, {"name": "Зелёный салат", "price": "600", "desc": "Микс салата, авокадо, огурец, черри, брокколи, пармезан, семечки"}]}, {"title": "Супы", "items": [{"name": "Том-ям", "price": "850", "desc": "Паста том-ям, креветки, лемонграсс, листья лайма, кокосовое молоко"}, {"name": "Куриный суп", "price": "350", "desc": "Куриное мясо, лапша, морковь, лук"}, {"name": "Чечевичный суп", "price": "350", "desc": "Чечевица, репчатый лук, морковь, сухари"}]}, {"title": "Основные блюда", "items": [{"name": "Стейк Рибай", "price": "1990", "desc": "С запечённым картофелем и грибами"}, {"name": "Стейк на говяжьей кости", "price": "2100", "desc": "Картофель в мундире, соус демиглас"}, {"name": "Медальоны", "price": "1720", "desc": "Запечённый картофель в грибном соусе"}, {"name": "Стейк из форели", "price": "1650", "desc": "Филе форели, картофельное пюре"}, {"name": "Куриный стейк", "price": "1100", "desc": "Куриное филе, шпинат, сливки, черри, пармезан"}]}, {"title": "Бургеры и сэндвичи", "items": [{"name": "Бургер с говядиной и чеддером", "price": "720", "desc": "Картофель фри и кетчуп"}, {"name": "Бургер с курицей и чеддером", "price": "660", "desc": "Картофель фри и кетчуп"}, {"name": "Сэндвич с курицей и сыром", "price": "660", "desc": "Картофель фри и кетчуп"}, {"name": "Сэндвич с говяжьей ветчиной и сыром", "price": "660", "desc": "Картофель фри и кетчуп"}]}, {"title": "Паста", "items": [{"name": "Альфредо", "price": "650", "desc": "Фетучини, куриное филе, шампиньоны и вешенки"}, {"name": "Болоньезе", "price": "650", "desc": "Спагетти, мясной соус, говяжий фарш, морковь, сельдерей, томат"}, {"name": "Арабьята", "price": "650", "desc": "Острый томатный соус с базиликом"}]}, {"title": "Гарниры", "items": [{"name": "Картофель фри", "price": "300", "desc": ""}, {"name": "Запечённый картофель", "price": "230", "desc": ""}, {"name": "Рис", "price": "190", "desc": ""}]}, {"title": "Соусы", "items": [{"name": "Сливочный соус", "price": "100", "desc": ""}, {"name": "Острый соус", "price": "100", "desc": ""}, {"name": "Чесночно-перечный соус", "price": "100", "desc": ""}, {"name": "Соус на основе говяжьих косточек", "price": "100", "desc": ""}]}, {"title": "Напитки", "items": [{"name": "Вода 1 л", "price": "80", "desc": ""}, {"name": "Кока-Кола 250 мл", "price": "180", "desc": ""}, {"name": "Спрайт 300 мл", "price": "175", "desc": ""}, {"name": "Фанта 250 мл", "price": "150", "desc": ""}, {"name": "Кока-Кола 1 л", "price": "250", "desc": ""}, {"name": "Латте 250 мл", "price": "240", "desc": ""}, {"name": "Капучино 250 мл", "price": "230", "desc": ""}, {"name": "Американо 250 мл", "price": "200", "desc": ""}, {"name": "Двойной эспрессо 250 мл", "price": "175", "desc": ""}, {"name": "Чёрный чай", "price": "139", "desc": ""}, {"name": "Зелёный чай", "price": "139", "desc": ""}, {"name": "Жасминовый чай", "price": "159", "desc": ""}, {"name": "Чай с молоком", "price": "159", "desc": ""}]}, {"title": "Десерты", "items": [{"name": "Тирамису", "price": "600", "desc": ""}, {"name": "Шоколадный торт", "price": "480", "desc": ""}, {"name": "Чизкейк", "price": "550", "desc": ""}, {"name": "Манго-маракуйя", "price": "500", "desc": ""}, {"name": "Медовик", "price": "480", "desc": ""}]}];
-const key='samtyr-menu-stock-v1';
-let stock={}; try{stock=JSON.parse(localStorage.getItem(key)||'{}')}catch(e){}
-const id=(s,i)=>s+'_'+i;
-function render(){
- const q=document.getElementById('search').value.trim().toLowerCase();
- const root=document.getElementById('menu'); root.innerHTML='';
- sections.forEach((section,si)=>{
-  const entries=section.items.map((it,ii)=>({...it,ii})).filter(it=>(section.title+' '+it.name+' '+it.desc).toLowerCase().includes(q));
-  if(!entries.length)return;
-  const wrap=document.createElement('section');wrap.className='category';
-  const h=document.createElement('h2');h.textContent=section.title;wrap.append(h);
-  entries.forEach(it=>{
-   const k=id(si,it.ii), state=stock[k]||'unknown';
-   const row=document.createElement('div');row.className='item';
-   const left=document.createElement('div');const name=document.createElement('div');name.className='item-name';name.textContent=it.name;left.append(name);
-   if(it.desc){const desc=document.createElement('div');desc.className='desc';desc.textContent=it.desc;left.append(desc)}
-   const right=document.createElement('div');right.className='right';
-   const price=document.createElement('div');price.className='price';price.textContent=it.price+' сом';right.append(price);
-   const st=document.createElement('div');st.className='status '+(state==='yes'?'available':state==='no'?'unavailable':'');st.textContent=state==='yes'?'В наличии':state==='no'?'Нет в наличии':'Уточняйте';right.append(st);
-   row.append(left,right);wrap.append(row);
-  });root.append(wrap);
- });
- renderAdmin();
-}
-function renderAdmin(){
- const box=document.getElementById('adminList');box.innerHTML='';
- sections.forEach((s,si)=>s.items.forEach((it,ii)=>{
-  const k=id(si,ii),v=stock[k]||'unknown',line=document.createElement('div');line.style='padding:9px 0;border-bottom:1px solid #eee';
-  const label=document.createElement('strong');label.textContent=it.name+' — ';line.append(label);
-  [['yes','В наличии'],['no','Нет'],['unknown','Уточнять']].forEach(([val,txt])=>{
-   const b=document.createElement('button');b.textContent=txt;b.className=v===val?'active':'';
-   b.onclick=()=>{stock[k]=val;localStorage.setItem(key,JSON.stringify(stock));render()};line.append(b);
-  });box.append(line);
- }));
-}
-document.getElementById('search').addEventListener('input',render);
-document.getElementById('reset').onclick=()=>{stock={};localStorage.removeItem(key);render()};
-render();
-</script></body></html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#24372e">
+  <meta name="description" content="Меню Samtyr Hotel: блюда, напитки и десерты с актуальными ценами.">
+  <title>Меню ресторана — Samtyr Hotel</title>
+  <style>
+    :root{color-scheme:light;--pine:#24372e;--pine-2:#344b3f;--gold:#b8925b;--cream:#f6f4ee;--paper:#fffefa;--ink:#292b26;--muted:#73766e;--line:#e8e4da;--soft:#eeece4;--shadow:0 16px 48px #19261d12;--serif:Georgia,"Times New Roman",serif;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:112px}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialiased}button,input{font:inherit}button{color:inherit}a{color:inherit}::selection{background:#d8c29f;color:var(--pine)}
+    .hero{position:relative;overflow:hidden;background:var(--pine);color:#fff;padding:clamp(32px,6vw,74px) 22px clamp(34px,5vw,62px)}.hero:before,.hero:after{content:"";position:absolute;border:1px solid #b8925b35;border-radius:50%;pointer-events:none}.hero:before{width:500px;height:500px;right:-180px;top:-350px}.hero:after{width:340px;height:340px;left:-260px;bottom:-230px}.hero-inner{position:relative;z-index:1;max-width:1120px;margin:auto;display:grid;grid-template-columns:minmax(200px,300px) 1fr;gap:clamp(30px,7vw,94px);align-items:center}.logo-frame{background:#fff;border-radius:3px;padding:10px;box-shadow:0 12px 34px #0d1b1470;max-width:300px}.logo-frame img{display:block;width:100%;height:auto}.hero-copy{padding:8px 0}.eyebrow{display:flex;align-items:center;gap:12px;color:#d8c19b;text-transform:uppercase;letter-spacing:.2em;font-size:11px;font-weight:650}.eyebrow:before{content:"";width:34px;height:1px;background:var(--gold)}h1{font:normal clamp(44px,7vw,76px)/1.02 var(--serif);letter-spacing:-.035em;margin:19px 0 13px}.hero-copy p{margin:0;color:#e2e5df;font-size:clamp(15px,1.7vw,18px);max-width:510px}.hero-meta{display:flex;align-items:center;gap:10px;margin-top:28px;color:#d6d9d2;font-size:13px}.hero-meta .dot{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+    .menu-shell{max-width:1120px;margin:0 auto;padding:34px 22px 76px}.toolbar{display:grid;grid-template-columns:minmax(250px,1fr) auto;gap:18px;align-items:center;margin-bottom:28px}.search-wrap{position:relative}.search-wrap svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:19px;height:19px;color:#777970;pointer-events:none}.search-wrap input{width:100%;height:52px;border:1px solid var(--line);border-radius:3px;background:var(--paper);padding:0 48px 0 48px;color:var(--ink);outline:none;transition:border-color .18s,box-shadow .18s}.search-wrap input::placeholder{color:#898b83}.search-wrap input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #b8925b25}.clear-search{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;background:transparent;color:var(--muted);cursor:pointer;border-radius:50%;display:none}.clear-search.visible{display:grid;place-items:center}.clear-search:hover{background:var(--soft)}.count{font-size:13px;color:var(--muted);white-space:nowrap}.count strong{color:var(--pine);font-weight:650}
+    .layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:54px;align-items:start}.category-nav{position:sticky;top:24px;border-top:1px solid var(--line);padding-top:18px}.nav-title{font-size:10px;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;margin:0 0 12px 12px}.category-nav ul{list-style:none;padding:0;margin:0;display:grid;gap:3px}.category-nav a{display:flex;align-items:center;min-height:42px;padding:8px 12px;text-decoration:none;color:#696d65;font-size:14px;border-left:2px solid transparent;transition:color .18s,background .18s,border .18s}.category-nav a:hover,.category-nav a.active{color:var(--pine);background:#eeece5;border-left-color:var(--gold)}.category-nav a.active{font-weight:650}
+    .menu-content{min-width:0}.category{margin:0 0 40px;scroll-margin-top:30px}.category-heading{display:flex;align-items:baseline;gap:13px;border-bottom:1px solid var(--gold);padding:0 0 12px;margin:0 0 8px}.category-heading h2{font:normal 29px/1.2 var(--serif);letter-spacing:-.015em;margin:0;color:var(--pine)}.category-heading span{font-size:12px;color:var(--muted)}.items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:30px}.item{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start;padding:18px 0 17px;border-bottom:1px solid var(--line)}.item-main{min-width:0}.item-name{font-size:15px;font-weight:620;line-height:1.35;color:#292c27}.item-desc{font-size:13px;line-height:1.5;color:var(--muted);margin:5px 0 0}.item-price{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--pine);font-size:14px;font-weight:680;padding-top:1px}.empty{background:var(--paper);border:1px solid var(--line);padding:28px;color:var(--muted);text-align:center}.service-note{display:flex;align-items:flex-start;gap:13px;margin:10px 0 0;padding:17px 18px;background:#eeece5;color:#62665e;font-size:13px}.service-note svg{flex:none;width:18px;height:18px;color:var(--gold);margin-top:1px}.service-note p{margin:0}
+    footer{background:#202f28;color:#e9e8df;padding:28px 22px calc(28px + env(safe-area-inset-bottom))}.footer-inner{max-width:1120px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px}.footer-brand{font:normal 20px var(--serif);letter-spacing:.08em}.footer-caption{font-size:12px;color:#c4c9c1;text-align:right}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:760px){html{scroll-padding-top:150px}.hero{padding:28px 20px 34px}.hero-inner{grid-template-columns:1fr;gap:22px;text-align:center}.logo-frame{width:min(220px,62vw);margin:0 auto;padding:7px}.eyebrow{justify-content:center;font-size:10px}.eyebrow:before{width:22px}.hero-copy{padding:0}.hero-copy h1{margin:14px 0 8px}.hero-copy p{margin:auto;max-width:440px}.hero-meta{justify-content:center;margin-top:17px;font-size:12px}.menu-shell{padding:23px 18px 50px}.toolbar{grid-template-columns:1fr;gap:10px;margin-bottom:17px}.search-wrap input{height:50px}.count{text-align:right;font-size:12px}.layout{display:block}.category-nav{position:sticky;z-index:5;top:0;margin:0 -18px 27px;padding:10px 18px;background:#f6f4eef2;backdrop-filter:blur(12px);border:0;border-bottom:1px solid var(--line);overflow:hidden}.nav-title{display:none}.category-nav ul{display:flex;gap:7px;overflow:auto;scrollbar-width:none;padding-bottom:1px}.category-nav ul::-webkit-scrollbar{display:none}.category-nav a{white-space:nowrap;min-height:37px;padding:7px 12px;border:1px solid var(--line);border-radius:2px;background:var(--paper);font-size:12px}.category-nav a:hover,.category-nav a.active{border-color:#b8925b;background:var(--pine);color:#fff}.items{grid-template-columns:1fr}.category{margin-bottom:31px}.category-heading h2{font-size:26px}.item{padding:15px 0}.item-name{font-size:14px}.item-desc{font-size:12px}.footer-inner{align-items:flex-start;flex-direction:column;gap:5px}.footer-caption{text-align:left}}
+    @media(max-width:360px){.hero{padding-left:16px;padding-right:16px}.menu-shell{padding-left:14px;padding-right:14px}.category-nav{margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px}.hero-meta{gap:7px;font-size:11px}.item{gap:8px}.item-price{font-size:13px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="logo-frame"><img src="samtyr-logo.png" alt="Samtyr Hotel" width="760" height="540"></div>
+      <div class="hero-copy">
+        <div class="eyebrow">Ресторан Samtyr Hotel</div>
+        <h1>Меню</h1>
+        <p>Продуманные сочетания, любимые вкусы и маленькие поводы остаться за столом подольше.</p>
+        <div class="hero-meta"><span>Ресторанное меню</span><span class="dot"></span><span>Цены в сомах</span></div>
+      </div>
+    </div>
+  </header>
+  <main class="menu-shell">
+    <div class="toolbar">
+      <label class="search-wrap">
+        <span class="sr-only">Поиск по меню</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.4 4.4"></path></svg>
+        <input id="search" type="search" placeholder="Найти блюдо или напиток" autocomplete="off" aria-label="Найти блюдо или напиток">
+        <button id="clearSearch" class="clear-search" type="button" aria-label="Очистить поиск"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"></path></svg></button>
+      </label>
+      <div class="count" id="resultCount" aria-live="polite"></div>
+    </div>
+    <div class="layout">
+      <nav class="category-nav" aria-label="Разделы меню"><p class="nav-title">Разделы меню</p><ul id="categoryNav"></ul></nav>
+      <div class="menu-content" id="menuContent"></div>
+    </div>
+    <aside class="service-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 10.8v5.5M12 7.7h.01"></path></svg>
+      <p>Наличие отдельных блюд может меняться. Пожалуйста, уточните у сотрудника ресторана.</p>
+    </aside>
+  </main>
+  <footer><div class="footer-inner"><div class="footer-brand">SAMTYR HOTEL</div><div class="footer-caption">Ресторанное меню · Цены указаны в сомах</div></div></footer>
+  <script>
+    const sections = [{"title":"Салаты","items":[{"name":"Цезарь с курицей","price":"650","desc":"Салат айсберг, соус «Цезарь», перепелиное яйцо, черри, пармезан, сухари"},{"name":"Греческий салат","price":"525","desc":"Огурец, помидор, сладкий перец, листья салата, оливковое масло, лимонный сок"},{"name":"Зелёный салат","price":"600","desc":"Микс салата, авокадо, огурец, черри, брокколи, пармезан, семечки"}]},{"title":"Супы","items":[{"name":"Том-ям","price":"850","desc":"Паста том-ям, креветки, лемонграсс, листья лайма, кокосовое молоко"},{"name":"Куриный суп","price":"350","desc":"Куриное мясо, лапша, морковь, лук"},{"name":"Чечевичный суп","price":"350","desc":"Чечевица, репчатый лук, морковь, сухари"}]},{"title":"Основные блюда","items":[{"name":"Стейк Рибай","price":"1990","desc":"С запечённым картофелем и грибами"},{"name":"Стейк на говяжьей кости","price":"2100","desc":"Картофель в мундире, соус демиглас"},{"name":"Медальоны","price":"1720","desc":"Запечённый картофель в грибном соусе"},{"name":"Стейк из форели","price":"1650","desc":"Филе форели, картофельное пюре"},{"name":"Куриный стейк","price":"1100","desc":"Куриное филе, шпинат, сливки, черри, пармезан"}]},{"title":"Бургеры и сэндвичи","items":[{"name":"Бургер с говядиной и чеддером","price":"720","desc":"Картофель фри и кетчуп"},{"name":"Бургер с курицей и чеддером","price":"660","desc":"Картофель фри и кетчуп"},{"name":"Сэндвич с курицей и сыром","price":"660","desc":"Картофель фри и кетчуп"},{"name":"Сэндвич с говяжьей ветчиной и сыром","price":"660","desc":"Картофель фри и кетчуп"}]},{"title":"Паста","items":[{"name":"Альфредо","price":"650","desc":"Фетучини, куриное филе, шампиньоны и вешенки"},{"name":"Болоньезе","price":"650","desc":"Спагетти, мясной соус, говяжий фарш, морковь, сельдерей, томат"},{"name":"Арабьята","price":"650","desc":"Острый томатный соус с базиликом"}]},{"title":"Гарниры","items":[{"name":"Картофель фри","price":"300","desc":""},{"name":"Запечённый картофель","price":"230","desc":""},{"name":"Рис","price":"190","desc":""}]},{"title":"Соусы","items":[{"name":"Сливочный соус","price":"100","desc":""},{"name":"Острый соус","price":"100","desc":""},{"name":"Чесночно-перечный соус","price":"100","desc":""},{"name":"Соус на основе говяжьих косточек","price":"100","desc":""}]},{"title":"Напитки","items":[{"name":"Вода 1 л","price":"80","desc":""},{"name":"Кока-Кола 250 мл","price":"180","desc":""},{"name":"Спрайт 300 мл","price":"175","desc":""},{"name":"Фанта 250 мл","price":"150","desc":""},{"name":"Кока-Кола 1 л","price":"250","desc":""},{"name":"Латте 250 мл","price":"240","desc":""},{"name":"Капучино 250 мл","price":"230","desc":""},{"name":"Американо 250 мл","price":"200","desc":""},{"name":"Двойной эспрессо 250 мл","price":"175","desc":""},{"name":"Чёрный чай","price":"139","desc":""},{"name":"Зелёный чай","price":"139","desc":""},{"name":"Жасминовый чай","price":"159","desc":""},{"name":"Чай с молоком","price":"159","desc":""}]},{"title":"Десерты","items":[{"name":"Тирамису","price":"600","desc":""},{"name":"Шоколадный торт","price":"480","desc":""},{"name":"Чизкейк","price":"550","desc":""},{"name":"Манго-маракуйя","price":"500","desc":""},{"name":"Медовик","price":"480","desc":""}]}];
+    const content=document.getElementById('menuContent'),nav=document.getElementById('categoryNav'),search=document.getElementById('search'),clear=document.getElementById('clearSearch'),count=document.getElementById('resultCount');
+    const slug=s=>s.toLowerCase().replace(/[^a-zа-яё0-9]+/gi,'-').replace(/^-|-$/g,'');
+    function render(){const query=search.value.trim().toLocaleLowerCase('ru');let total=0;const visible=[];sections.forEach(section=>{const items=section.items.filter(item=>(section.title+' '+item.name+' '+item.desc).toLocaleLowerCase('ru').includes(query));total+=items.length;if(items.length)visible.push({section,items});});
+      content.innerHTML=visible.length?visible.map(({section,items})=>`<section class="category" id="${slug(section.title)}"><div class="category-heading"><h2>${section.title}</h2><span>${items.length} ${items.length===1?'позиция':items.length<5?'позиции':'позиций'}</span></div><div class="items">${items.map(item=>`<article class="item"><div class="item-main"><div class="item-name">${item.name}</div>${item.desc?`<p class="item-desc">${item.desc}</p>`:''}</div><div class="item-price">${Number(item.price).toLocaleString('ru-RU')} сом</div></article>`).join('')}</div></section>`).join(''):'<div class="empty">Ничего не найдено. Попробуйте изменить запрос.</div>';
+      nav.innerHTML=visible.map(({section})=>`<li><a href="#${slug(section.title)}">${section.title}</a></li>`).join('');count.innerHTML=query?`Найдено: <strong>${total}</strong>`:`<strong>${sections.reduce((n,s)=>n+s.items.length,0)}</strong> блюд и напитков`;clear.classList.toggle('visible',Boolean(search.value));}
+    search.addEventListener('input',render);clear.addEventListener('click',()=>{search.value='';render();search.focus()});render();
+    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){nav.querySelectorAll('a').forEach(link=>link.classList.toggle('active',link.hash==='#'+entry.target.id));}}),{rootMargin:'-18% 0px -68% 0px'});
+    const watch=()=>{document.querySelectorAll('.category').forEach(section=>observer.observe(section));};watch();new MutationObserver(watch).observe(content,{childList:true});
+  </script>
+</body>
+</html>
